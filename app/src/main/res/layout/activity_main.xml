@@ -13,5 +13,56 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:layout_centerHorizontal="true"
+        android:text="请设置赛制"
+        android:id="@+id/textView" />
+
+    <TextView
+        android:text="正方辩题"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/positiveTitle"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="正方队名"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/negativeTitle"
+        android:layout_alignStart="@+id/negativeTitle"
+        android:layout_marginTop="40dp"
+        android:id="@+id/positiveName" />
+
+    <TextView
+        android:text="反方辩题"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:id="@+id/negativeTitle"
+        android:layout_below="@+id/positiveTitle"
+        android:layout_alignStart="@+id/positiveTitle" />
+
+    <TextView
+        android:text="反方队名"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/positiveName"
+        android:layout_alignStart="@+id/positiveName"
+        android:layout_marginTop="28dp"
+        android:id="@+id/negativeName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:layout_alignBottom="@+id/positiveTitle"
+        android:layout_toEndOf="@+id/positiveTitle"
+        android:layout_marginStart="21dp"
+        android:id="@+id/editText" />
 </RelativeLayout>
