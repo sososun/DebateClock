@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:layout_centerHorizontal="true"
-        android:text="请设置赛制"
+        android:text="双方辩题及队名"
         android:id="@+id/textView" />
 
     <TextView
@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="40dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:id="@+id/positiveTitle"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true" />
@@ -33,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/negativeTitle"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:layout_alignStart="@+id/negativeTitle"
         android:layout_marginTop="40dp"
         android:id="@+id/positiveName" />
@@ -41,7 +43,8 @@
         android:text="反方辩题"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="40dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:id="@+id/negativeTitle"
         android:layout_below="@+id/positiveTitle"
         android:layout_alignStart="@+id/positiveTitle" />
@@ -52,17 +55,61 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/positiveName"
         android:layout_alignStart="@+id/positiveName"
-        android:layout_marginTop="28dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:layout_marginTop="40dp"
         android:id="@+id/negativeName" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="请输入正方辩题"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:minEms="10"
+        android:id="@+id/positiveTitleEdit"
+        android:layout_alignBaseline="@+id/positiveTitle"
+        android:layout_alignBottom="@+id/positiveTitle"
+        android:layout_marginLeft="130dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:ems="10"
-        android:layout_alignBottom="@+id/positiveTitle"
-        android:layout_toEndOf="@+id/positiveTitle"
-        android:layout_marginStart="21dp"
-        android:id="@+id/editText" />
+        android:hint="请输入反方辩题"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:minEms="10"
+        android:layout_alignBottom="@+id/negativeTitle"
+        android:layout_alignStart="@+id/positiveTitleEdit"
+        android:id="@+id/negativeTitleEdit"
+        android:layout_alignBaseline="@+id/negativeTitle"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="请输入正方队名"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:minEms="10"
+        android:layout_alignBottom="@+id/positiveName"
+        android:layout_alignStart="@+id/positiveTitleEdit"
+        android:id="@+id/positiveNameEdit"
+        android:layout_alignBaseline="@+id/positiveName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="请输入反方队名"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:minEms="10"
+        android:layout_alignBottom="@+id/negativeName"
+        android:layout_alignStart="@+id/positiveTitleEdit"
+        android:id="@+id/negativeNameEdit"
+        android:layout_alignBaseline="@+id/negativeName" />
+
+    <Button
+        android:text="进入赛制设置页面"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:id="@+id/button" />
+
+
 </RelativeLayout>
