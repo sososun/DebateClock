@@ -20,6 +20,10 @@
             android:label="设置赛制">
 
         </activity>
+        <activity android:name=".GamingActivity"
+            android:label="辩论赛名称">
+
+        </activity>
     </application>
 
 </manifest>
