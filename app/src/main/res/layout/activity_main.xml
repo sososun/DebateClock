@@ -11,105 +11,81 @@
     tools:context="com.sunxinyang.betaclock.MainActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:layout_centerHorizontal="true"
-        android:text="双方辩题及队名"
-        android:id="@+id/textView" />
+        android:text="@string/game_setting_title"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
-        android:text="正方辩题"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:id="@+id/positiveTitle"
+        style="@style/start_text_style"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:layout_marginStart="24dp"
+        android:text="@string/game_setting_positive_title" />
 
     <TextView
-        android:text="正方队名"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/negativeTitle"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
+        android:id="@+id/positiveName"
+        style="@style/start_text_style"
         android:layout_alignStart="@+id/negativeTitle"
-        android:layout_marginTop="40dp"
-        android:id="@+id/positiveName" />
+        android:layout_below="@+id/negativeTitle"
+        android:text="@string/game_setting_positive_name" />
 
     <TextView
-        android:text="反方辩题"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
         android:id="@+id/negativeTitle"
+        style="@style/start_text_style"
+        android:layout_alignStart="@+id/positiveTitle"
         android:layout_below="@+id/positiveTitle"
-        android:layout_alignStart="@+id/positiveTitle" />
+        android:text="@string/game_setting_negative_title" />
 
     <TextView
-        android:text="反方队名"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/positiveName"
+        android:id="@+id/negativeName"
+        style="@style/start_text_style"
         android:layout_alignStart="@+id/positiveName"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:layout_marginTop="40dp"
-        android:id="@+id/negativeName" />
+        android:layout_below="@+id/positiveName"
+        android:text="@string/game_setting_negative_name" />
+
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="请输入正方辩题"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:minEms="10"
         android:id="@+id/positiveTitleEdit"
+        style="@style/start_edit_style"
         android:layout_alignBaseline="@+id/positiveTitle"
         android:layout_alignBottom="@+id/positiveTitle"
-        android:layout_marginLeft="130dp" />
+        android:layout_marginLeft="130dp"
+        android:hint="@string/game_setting_positive_title_edit" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="请输入反方辩题"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:minEms="10"
+        android:id="@+id/negativeTitleEdit"
+        style="@style/start_edit_style"
+        android:layout_alignBaseline="@+id/negativeTitle"
         android:layout_alignBottom="@+id/negativeTitle"
         android:layout_alignStart="@+id/positiveTitleEdit"
-        android:id="@+id/negativeTitleEdit"
-        android:layout_alignBaseline="@+id/negativeTitle"
-        />
+        android:hint="@string/game_setting_negative_title_edit" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="请输入正方队名"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:minEms="10"
+        android:id="@+id/positiveNameEdit"
+        style="@style/start_edit_style"
+        android:layout_alignBaseline="@+id/positiveName"
         android:layout_alignBottom="@+id/positiveName"
         android:layout_alignStart="@+id/positiveTitleEdit"
-        android:id="@+id/positiveNameEdit"
-        android:layout_alignBaseline="@+id/positiveName" />
+        android:hint="@string/game_setting_positive_name_edit" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="请输入反方队名"
-        android:textAppearance="@android:style/TextAppearance.Material.Small"
-        android:minEms="10"
+        android:id="@+id/negativeNameEdit"
+        style="@style/start_edit_style"
+        android:layout_alignBaseline="@+id/negativeName"
         android:layout_alignBottom="@+id/negativeName"
         android:layout_alignStart="@+id/positiveTitleEdit"
-        android:id="@+id/negativeNameEdit"
-        android:layout_alignBaseline="@+id/negativeName" />
+        android:hint="@string/game_setting_negative_name_edit" />
 
     <Button
-        android:text="进入赛制设置页面"
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="80dp"
-        android:id="@+id/button" />
+        android:text="@string/game_setting_into_rule_setting_activity" />
 
 
 </RelativeLayout>

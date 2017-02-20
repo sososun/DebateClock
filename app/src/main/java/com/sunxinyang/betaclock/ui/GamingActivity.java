@@ -1,14 +1,16 @@
-package com.sunxinyang.betaclock;
+package com.sunxinyang.betaclock.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sunxinyang.betaclock.R;
+
 /**
  * Created by soso-sun on 2017/2/20.
  */
 
-public class GamingActivity extends AppCompatActivity{
+public class GamingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

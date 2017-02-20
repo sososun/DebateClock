@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sunxinyang.betaclock.GameRuleSettingActivity">
+    tools:context="com.sunxinyang.betaclock.ui.GameRuleSettingActivity">
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="阶段名称" />
+            android:text="@string/rule_setting_stage_name" />
 
         <EditText
             android:id="@+id/stageNameEdit"
@@ -34,7 +34,7 @@
             android:layout_alignBaseline="@+id/stageName"
             android:layout_alignBottom="@+id/stageName"
             android:layout_alignParentEnd="true"
-            android:hint="请输入阶段名称"
+            android:hint="@string/rule_setting_stage_name_edit"
             android:maxEms="10"
             android:textAppearance="@android:style/TextAppearance.Material.Small" />
     </RelativeLayout>
@@ -51,7 +51,7 @@
 
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/positiveRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="正方计时"
@@ -59,7 +59,7 @@
             />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/negativeRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/radioButton"
@@ -68,7 +68,7 @@
             android:text="反方计时" />
 
         <RadioButton
-            android:id="@+id/radioButton3"
+            android:id="@+id/bothRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -78,7 +78,7 @@
     </RadioGroup>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout2"
+        android:id="@+id/positiveRelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/RelativeLayout1"
@@ -107,12 +107,12 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout3"
+        android:id="@+id/negativeRelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/RelativeLayout1"
         android:layout_alignStart="@+id/RelativeLayout1"
-        android:layout_below="@+id/RelativeLayout2"
+        android:layout_below="@+id/positiveRelativeLayout"
         android:layout_marginTop="30dp">
 
         <TextView
@@ -140,7 +140,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/RelativeLayout3"
+        android:layout_below="@+id/negativeRelativeLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:text="是否开启30秒提醒" />

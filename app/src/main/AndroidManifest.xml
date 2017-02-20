@@ -16,11 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameRuleSettingActivity"
+        <activity android:name=".ui.GameRuleSettingActivity"
             android:label="设置赛制">
 
         </activity>
-        <activity android:name=".GamingActivity"
+        <activity android:name=".ui.GamingActivity"
             android:label="辩论赛名称">
 
         </activity>

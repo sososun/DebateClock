@@ -1,3 +1,18 @@
 <resources>
+    <!-- 赛制准备页面 -->
     <string name="app_name">辩论计时器</string>
+    <string name="game_setting_title">双方辩题及队名</string>
+    <string name="game_setting_positive_title">正方辩题</string>
+    <string name="game_setting_negative_title">反方辩题</string>
+    <string name="game_setting_positive_name">正方队名</string>
+    <string name="game_setting_negative_name">反方队名</string>
+    <string name="game_setting_positive_title_edit">请输入正方辩题</string>
+    <string name="game_setting_negative_title_edit">请输入反方辩题</string>
+    <string name="game_setting_positive_name_edit">请输入正方队名</string>
+    <string name="game_setting_negative_name_edit">请输入反方队名</string>
+    <string name="game_setting_into_rule_setting_activity">进入赛制设置页面</string>
+    <string name="game_setting_toast">需要填写全部信息才可以进入比赛哦~</string>
+    <!-- 赛制设置页面 -->
+    <string name="rule_setting_stage_name">阶段名称</string>
+    <string name="rule_setting_stage_name_edit">请输入阶段名称</string>
 </resources>
