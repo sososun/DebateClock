@@ -1,4 +1,4 @@
-package com.sunxinyang.betaclock;
+package com.sunxinyang.debateclock;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

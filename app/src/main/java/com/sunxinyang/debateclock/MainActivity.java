@@ -1,4 +1,4 @@
-package com.sunxinyang.betaclock;
+package com.sunxinyang.debateclock;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.sunxinyang.betaclock.ui.GameRuleSettingActivity;
+import com.sunxinyang.debateclock.ui.GameRuleSettingActivity;
+import com.sunxinyang.debateclock.util.CommonUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkEditAndSave()) {
                     Intent intent = new Intent(MainActivity.this, GameRuleSettingActivity.class);
-                    intent.setAction("Start gaming");
+                    intent.putExtra(CommonUtils.LIST_NUM, 0);
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();

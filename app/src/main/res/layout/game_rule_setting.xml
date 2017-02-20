@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sunxinyang.betaclock.ui.GameRuleSettingActivity">
+    tools:context="com.sunxinyang.debateclock.ui.GameRuleSettingActivity">
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -102,7 +102,7 @@
             android:layout_alignParentEnd="true"
             android:ems="5"
             android:hint="请输入时间"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:textAppearance="@android:style/TextAppearance.Material.Small" />
     </RelativeLayout>
 
@@ -132,7 +132,7 @@
             android:layout_alignParentEnd="true"
             android:ems="5"
             android:hint="请输入时间"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:textAppearance="@android:style/TextAppearance.Material.Small" />
     </RelativeLayout>
 

@@ -1,6 +1,6 @@
-package com.sunxinyang.betaclock.util;
+package com.sunxinyang.debateclock.util;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by sunxinyang on 2017/2/20.
@@ -16,5 +16,7 @@ public class CommonUtils {
 
     public final static int BOTH_NOT = 0;
 
-    public static ArrayList<RuleSettingInfo> ruleList = new ArrayList<>();
+    public final static String LIST_NUM = "listNum";
+
+    public static LinkedList<RuleSettingInfo> ruleList = new LinkedList<>();
 }

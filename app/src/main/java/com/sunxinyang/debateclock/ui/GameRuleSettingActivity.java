@@ -1,4 +1,4 @@
-package com.sunxinyang.betaclock.ui;
+package com.sunxinyang.debateclock.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +9,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import com.sunxinyang.betaclock.R;
-import com.sunxinyang.betaclock.util.CommonUtils;
-import com.sunxinyang.betaclock.util.RuleSettingInfo;
+import com.sunxinyang.debateclock.R;
+import com.sunxinyang.debateclock.util.CommonUtils;
+import com.sunxinyang.debateclock.util.RuleSettingInfo;
 
 /**
  * Created by soso-sun on 2017/2/18.
@@ -38,12 +39,40 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         choiceTimeUI(CommonUtils.BOTH_NOT);
         if (isFirst()) {
             previousButton.setVisibility(View.GONE);
-            listNum = 0;
+        }
+        listNum = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
+        showRule(listNum);
+    }
+
+    private void showRule(int listNum){
+        if(listNum < CommonUtils.ruleList.size()){
+            stageNameEdit.setText(CommonUtils.ruleList.get(listNum).stageName);
+            checkBox.setChecked(CommonUtils.ruleList.get(listNum).tips);
+            switch (CommonUtils.ruleList.get(listNum).timeModel){
+                case CommonUtils.BOTH:
+                    bothRadioButton.setChecked(true);
+                    positiveTimeEdit.setText(CommonUtils.ruleList.get(listNum).positiveTime);
+                    negativeTimeEdit.setText(CommonUtils.ruleList.get(listNum).negativeTime);
+                    choiceTimeUI(CommonUtils.BOTH);
+                    break;
+                case CommonUtils.POSITIVE:
+                    positiveRadioButton.setChecked(true);
+                    positiveTimeEdit.setText(CommonUtils.ruleList.get(listNum).positiveTime);
+                    choiceTimeUI(CommonUtils.POSITIVE);
+                    break;
+                case CommonUtils.NEGATIVE:
+                    negativeRadioButton.setChecked(true);
+                    negativeTimeEdit.setText(CommonUtils.ruleList.get(listNum).negativeTime);
+                    choiceTimeUI(CommonUtils.NEGATIVE);
+                    break;
+                default:
+                    choiceTimeUI(CommonUtils.BOTH_NOT);
+            }
         }
     }
 
     private boolean isFirst() {
-        return "Start gaming".equals(getIntent().getAction()) ? true : false;
+        return getIntent().getIntExtra(CommonUtils.LIST_NUM, 0) == 0 ? true : false;
     }
 
     private void initUI() {
@@ -106,30 +135,67 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 choiceTimeUI(CommonUtils.BOTH);
                 break;
             case R.id.previousButton:
+                Intent previousIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
+                previousIntent.putExtra(CommonUtils.LIST_NUM,listNum - 1);
+                startActivity(previousIntent);
+                finish();
                 break;
             case R.id.nextButton:
-
-                startActivity(new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class));
-                finish();
+                if (saveSetting()){
+                    Intent nextIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
+                    nextIntent.putExtra(CommonUtils.LIST_NUM,listNum + 1);
+                    startActivity(nextIntent);
+                    finish();
+                }else{
+                    Toast.makeText(this,getText(R.string.game_setting_toast),Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.finishButton:
-                startActivity(new Intent(GameRuleSettingActivity.this, GamingActivity.class));
-                finish();
-                break;
-            case R.id.checkBox:
+                if (saveSetting()){
+                    Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
+                    finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
+                    startActivity(finishIntent);
+                    finish();
+                }else{
+                    Toast.makeText(this,getText(R.string.game_setting_toast),Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
         }
     }
 
     private boolean saveSetting() {
+
         RuleSettingInfo ruleSettingInfo = new RuleSettingInfo();
-        ruleSettingInfo.stageName = stageNameEdit.getText().toString().trim();
+        String stageName = stageNameEdit.getText().toString().trim();
+        String positiveTime = positiveTimeEdit.getText().toString().trim();
+        String negativeTime = negativeTimeEdit.getText().toString().trim();
+
+        if("".equals(stageName) || timeModel == CommonUtils.BOTH_NOT){
+            return false;
+        }
+        if(timeModel == CommonUtils.POSITIVE && "".equals(positiveTime)){
+            return false;
+        }
+        if(timeModel == CommonUtils.NEGATIVE && "".equals(negativeTime)){
+            return false;
+        }
+        if(timeModel == CommonUtils.BOTH && "".equals(positiveTime) && "".equals(negativeTime)){
+            return false;
+        }
+
+        ruleSettingInfo.stageName = stageName;
         ruleSettingInfo.timeModel = timeModel;
-        ruleSettingInfo.positiveTime = "";
-        ruleSettingInfo.negativeTime = "";
-        ruleSettingInfo.tips = false;
-        return false;
-//        CommonUtils.ruleList.add
+        ruleSettingInfo.positiveTime = positiveTime;
+        ruleSettingInfo.negativeTime = negativeTime;
+        ruleSettingInfo.tips = checkBox.isChecked() ? true : false;
+        if(listNum < CommonUtils.ruleList.size()){
+            CommonUtils.ruleList.remove(listNum);
+            CommonUtils.ruleList.add(listNum, ruleSettingInfo);
+        }else {
+            CommonUtils.ruleList.add(listNum, ruleSettingInfo);
+        }
+        Toast.makeText(this, "链表长度为： " + CommonUtils.ruleList.size(), Toast.LENGTH_SHORT).show();
+        return true;
     }
 }

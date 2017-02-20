@@ -1,4 +1,4 @@
-package com.sunxinyang.betaclock;
+package com.sunxinyang.debateclock;
 
 import org.junit.Test;
 
