@@ -3,6 +3,7 @@ package com.sunxinyang.debateclock;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkEditAndSave()) {
+                    CommonUtils.ruleList.clear();
                     Intent intent = new Intent(MainActivity.this, GameRuleSettingActivity.class);
                     intent.putExtra(CommonUtils.LIST_NUM, 0);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(MainActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }

@@ -15,4 +15,8 @@
     <!-- 赛制设置页面 -->
     <string name="rule_setting_stage_name">阶段名称</string>
     <string name="rule_setting_stage_name_edit">请输入阶段名称</string>
+    <!-- 计时页面 -->
+    <string name="finish_game">完成比赛</string>
+    <string name="start_time">开始计时</string>
+    <string name="stop_time">暂停计时</string>
 </resources>

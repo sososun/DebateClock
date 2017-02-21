@@ -2,6 +2,7 @@ package com.sunxinyang.debateclock.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,9 @@ import android.widget.Toast;
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
 import com.sunxinyang.debateclock.util.RuleSettingInfo;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by soso-sun on 2017/2/18.
@@ -152,16 +156,37 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.finishButton:
                 if (saveSetting()){
-                    Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
-                    finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
-                    startActivity(finishIntent);
-                    finish();
+                    saveToFile();
+//                    Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
+//                    finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
+//                    startActivity(finishIntent);
+//                    finish();
                 }else{
                     Toast.makeText(this,getText(R.string.game_setting_toast),Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
         }
+    }
+    private boolean saveToFile(){
+        File sdcardDir = Environment.getExternalStorageDirectory();
+        File file = new File(sdcardDir.getPath()+"//debateClock");
+        if (!file.exists()) {
+            //若不存在，创建目录，可以在应用启动的时候创建
+            file.mkdir();
+        }
+//        String data = (String) dataArray.get(i) + "\n";
+//        sensitiveWords += data;
+//        try {
+//            FileOutputStream outputStream = new FileOutputStream(file);
+//            byte[] sensitiveBytes = sensitiveWords.getBytes();
+//            outputStream.write(sensitiveBytes);
+//            outputStream.flush();
+//            outputStream.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        return true;
     }
 
     private boolean saveSetting() {
@@ -186,8 +211,9 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
 
         ruleSettingInfo.stageName = stageName;
         ruleSettingInfo.timeModel = timeModel;
-        ruleSettingInfo.positiveTime = positiveTime;
-        ruleSettingInfo.negativeTime = negativeTime;
+
+        ruleSettingInfo.positiveTime = "".equals(positiveTime) ? 0 : Integer.parseInt(positiveTime);
+        ruleSettingInfo.negativeTime = "".equals(negativeTime) ? 0 : Integer.parseInt(negativeTime);
         ruleSettingInfo.tips = checkBox.isChecked() ? true : false;
         if(listNum < CommonUtils.ruleList.size()){
             CommonUtils.ruleList.remove(listNum);

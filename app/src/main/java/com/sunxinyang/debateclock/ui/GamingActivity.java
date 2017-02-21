@@ -1,12 +1,14 @@
 package com.sunxinyang.debateclock.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,20 +16,17 @@ import android.widget.TextView;
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * Created by soso-sun on 2017/2/20.
  */
 
 public class GamingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView positive, positiveTitle, positiveTime, negative, negativeTitle, negativeTime;
-    Button nextButton, settingButton, switchButton;
-    String positiveTimeString, negativeTimeString;
-    private Timer timer = null;//计时器
-    private TimerTask timerTask = null;
+    TextView positive, positiveTitle, positiveTime, negative, negativeTitle, negativeTime,showTime,stageName;
+    Button previousButton, nextButton, settingButton, switchButton;
+    int positiveTimeInt, negativeTimeInt, step;
+    int timeModel,bothTag = CommonUtils.POSITIVE;
+    private TimeCount positiveTimeCount, negativeTimeCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,27 +39,41 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
 
     private void loadData() {
         SharedPreferences preferences = getSharedPreferences("game_title", Context.MODE_PRIVATE);
-        int step = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
+        step = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
+        timeModel = CommonUtils.ruleList.get(step).timeModel;
         positive.setText(preferences.getString("positiveName", null));
         negative.setText(preferences.getString("negativeName", null));
         positiveTitle.setText(preferences.getString("positiveTitle", null));
         negativeTitle.setText(preferences.getString("negativeTitle", null));
-        if (CommonUtils.ruleList.get(step).timeModel == CommonUtils.BOTH) {
+        stageName.setText(CommonUtils.ruleList.get(step).stageName);
+        settingButton.setText(R.string.start_time);
+        if (timeModel == CommonUtils.BOTH) {
             positiveTime.setVisibility(View.VISIBLE);
             negativeTime.setVisibility(View.VISIBLE);
-            positiveTimeString = CommonUtils.ruleList.get(step).positiveTime;
-            negativeTimeString = CommonUtils.ruleList.get(step).negativeTime;
-            positiveTime.setText(positiveTimeString + "秒");
-            negativeTime.setText(negativeTimeString + "秒");
-
-        } else if (CommonUtils.ruleList.get(step).timeModel == CommonUtils.POSITIVE) {
+            positiveTimeInt = CommonUtils.ruleList.get(step).positiveTime;
+            negativeTimeInt = CommonUtils.ruleList.get(step).negativeTime;
+            positiveTime.setText(positiveTimeInt + "秒");
+            negativeTime.setText(negativeTimeInt + "秒");
+            switchButton.setVisibility(View.VISIBLE);
+            switchButton.setClickable(false);
+//            switchButton.setBackground();
+        } else if (timeModel == CommonUtils.POSITIVE) {
             positiveTime.setVisibility(View.VISIBLE);
             negativeTime.setVisibility(View.GONE);
+            positiveTimeInt = CommonUtils.ruleList.get(step).positiveTime;
             positiveTime.setText(CommonUtils.ruleList.get(step).positiveTime + "秒");
-        } else if (CommonUtils.ruleList.get(step).timeModel == CommonUtils.NEGATIVE) {
+            switchButton.setVisibility(View.GONE);
+        } else if (timeModel == CommonUtils.NEGATIVE) {
             positiveTime.setVisibility(View.GONE);
             negativeTime.setVisibility(View.VISIBLE);
+            negativeTimeInt = CommonUtils.ruleList.get(step).negativeTime;
             negativeTime.setText(CommonUtils.ruleList.get(step).negativeTime + "秒");
+            switchButton.setVisibility(View.GONE);
+        }
+        if(step == CommonUtils.ruleList.size() - 1){//当是最后一个环节的时候，下一环节按钮变为完成比赛
+            nextButton.setText(R.string.finish_game);
+        }else if (step == 0){
+            previousButton.setVisibility(View.GONE);
         }
     }
 
@@ -71,6 +84,9 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
         negativeTitle = (TextView) findViewById(R.id.negativeTitle);
         positiveTime = (TextView) findViewById(R.id.positiveTime);
         negativeTime = (TextView) findViewById(R.id.negativeTime);
+        showTime = (TextView) findViewById(R.id.showTime);
+        stageName = (TextView) findViewById(R.id.stageName);
+        previousButton = (Button) findViewById(R.id.previousButton);
         nextButton = (Button) findViewById(R.id.nextButton);
         settingButton = (Button) findViewById(R.id.settingButton);
         switchButton = (Button) findViewById(R.id.switchButton);
@@ -85,54 +101,129 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.nextButton:
+            case R.id.switchButton:
+                if(bothTag == CommonUtils.POSITIVE){
+                    if(positiveTimeCount != null){
+                        positiveTimeCount.cancel();
+                        bothTag = CommonUtils.NEGATIVE;
+                        startNegativeTime();
+                    }
+                }else if (bothTag == CommonUtils.NEGATIVE){
+                    if (negativeTimeCount != null){
+                        negativeTimeCount.cancel();
+                        bothTag = CommonUtils.POSITIVE;
+                        startPositiveTime();
+                    }
+                }
                 break;
             case R.id.settingButton:
-                startTime();
+                if(settingButton.getText().equals(getText(R.string.start_time))){
+                    if(timeModel == CommonUtils.BOTH){
+                        if(bothTag == CommonUtils.POSITIVE){
+                            startPositiveTime();
+                        }else if (bothTag == CommonUtils.NEGATIVE){
+                            startNegativeTime();
+                        }
+                        switchButton.setClickable(true);
+                    }else if (timeModel == CommonUtils.POSITIVE){
+                        startPositiveTime();
+                    }else if (timeModel == CommonUtils.NEGATIVE){
+                        startNegativeTime();
+                    }
+                    settingButton.setText(R.string.stop_time);
+                }else if (settingButton.getText().equals(getText(R.string.stop_time))){
+                    if(timeModel == CommonUtils.POSITIVE){
+                        positiveTimeCount.cancel();
+                    }else if (timeModel == CommonUtils.NEGATIVE){
+                        negativeTimeCount.cancel();
+                    }else if (timeModel == CommonUtils.BOTH){
+                        if(bothTag == CommonUtils.POSITIVE){
+                            positiveTimeCount.cancel();
+                        }else if (bothTag == CommonUtils.NEGATIVE){
+                            negativeTimeCount.cancel();
+                        }
+                        switchButton.setClickable(false);
+                    }
+                    settingButton.setText(R.string.start_time);
+                }
                 break;
-            case R.id.switchButton:
+            case R.id.previousButton:
+                if(step != 0){
+                    Intent previousIntent = new Intent(GamingActivity.this, GamingActivity.class);
+                    previousIntent.putExtra(CommonUtils.LIST_NUM, step - 1);
+                    startActivity(previousIntent);
+                }
+            case R.id.nextButton:
+                if(step != CommonUtils.ruleList.size() - 1){
+                    Intent nextIntent = new Intent(GamingActivity.this, GamingActivity.class);
+                    nextIntent.putExtra(CommonUtils.LIST_NUM, step + 1);
+                    startActivity(nextIntent);
+                }else{
+                    finish();
+                }
                 break;
             default:
         }
     }
-
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            positiveTime.setText(msg.arg1 + "");
-            startTime();
-        }
-
-        ;
-    };
-
-    /**
-     * 开始自动减时
-     */
-    private void startTime() {
-        if (timer == null) {
-            timer = new Timer();
-        }
-
-        timerTask = new TimerTask() {
-
-            @Override
-            public void run() {
-                int i = 90;
-                i--;//自动减1
-                Message message = Message.obtain();
-                message.arg1 = i;
-                mHandler.sendMessage(message);//发送消息
-            }
-        };
-        timer.schedule(timerTask, 1000);//1000ms执行一次
+    private void startPositiveTime(){
+        positiveTimeCount = new TimeCount(positiveTimeInt * 1000, 1000);
+        positiveTimeCount.start();
     }
 
-    /**
-     * 停止自动减时
-     */
-    private void stopTime() {
-        if (timer != null)
-            timer.cancel();
+    private void startNegativeTime(){
+        negativeTimeCount = new TimeCount(negativeTimeInt * 1000, 1000);
+        negativeTimeCount.start();
+    }
 
+    private void changePositiveTime(long millisUntilFinished){
+        positiveTimeInt = (int)millisUntilFinished / 1000;
+        positiveTime.setText(positiveTimeInt + "秒");
+        showTime.setText(positiveTimeInt + "秒");
+    }
+    private void changeNegativeTime(long millisUntilFinished){
+        negativeTimeInt = (int)millisUntilFinished / 1000;
+        negativeTime.setText(negativeTimeInt + "秒");
+        showTime.setText(negativeTimeInt + "秒");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (negativeTimeCount != null)
+            negativeTimeCount.cancel();
+        if (positiveTimeCount != null)
+            positiveTimeCount.cancel();
+        return super.onKeyDown(keyCode, event);
+    }
+
+    class TimeCount extends CountDownTimer {
+        public TimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {// 计时完毕
+
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {// 计时过程
+            Log.e("SXY","剩余" + millisUntilFinished/1000);
+            switch (timeModel){
+                case CommonUtils.BOTH:
+                    if(bothTag == CommonUtils.POSITIVE){
+                        changePositiveTime(millisUntilFinished);
+                    }else if(bothTag == CommonUtils.NEGATIVE){
+                        changeNegativeTime(millisUntilFinished);
+                    }
+                    break;
+                case CommonUtils.POSITIVE:
+                    changePositiveTime(millisUntilFinished);
+                    break;
+                case CommonUtils.NEGATIVE:
+                    changeNegativeTime(millisUntilFinished);
+                    break;
+                default:
+            }
+        }
     }
 }

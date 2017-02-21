@@ -10,9 +10,9 @@ public class RuleSettingInfo {
 
     public int timeModel;
 
-    public String positiveTime;
+    public int positiveTime;
 
-    public String negativeTime;
+    public int negativeTime;
 
     public boolean tips;
 }
