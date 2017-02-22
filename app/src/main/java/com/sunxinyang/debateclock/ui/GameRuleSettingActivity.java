@@ -1,6 +1,7 @@
 package com.sunxinyang.debateclock.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +13,25 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
 import com.sunxinyang.debateclock.util.RuleSettingInfo;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.LinkedList;
 
 /**
  * Created by soso-sun on 2017/2/18.
@@ -48,11 +62,11 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         showRule(listNum);
     }
 
-    private void showRule(int listNum){
-        if(listNum < CommonUtils.ruleList.size()){
+    private void showRule(int listNum) {
+        if (listNum < CommonUtils.ruleList.size()) {
             stageNameEdit.setText(CommonUtils.ruleList.get(listNum).stageName);
             checkBox.setChecked(CommonUtils.ruleList.get(listNum).tips);
-            switch (CommonUtils.ruleList.get(listNum).timeModel){
+            switch (CommonUtils.ruleList.get(listNum).timeModel) {
                 case CommonUtils.BOTH:
                     bothRadioButton.setChecked(true);
                     positiveTimeEdit.setText(CommonUtils.ruleList.get(listNum).positiveTime);
@@ -140,45 +154,56 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.previousButton:
                 Intent previousIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
-                previousIntent.putExtra(CommonUtils.LIST_NUM,listNum - 1);
+                previousIntent.putExtra(CommonUtils.LIST_NUM, listNum - 1);
                 startActivity(previousIntent);
-                finish();
                 break;
             case R.id.nextButton:
-                if (saveSetting()){
+                if (saveSetting()) {
                     Intent nextIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
-                    nextIntent.putExtra(CommonUtils.LIST_NUM,listNum + 1);
+                    nextIntent.putExtra(CommonUtils.LIST_NUM, listNum + 1);
                     startActivity(nextIntent);
-                    finish();
-                }else{
-                    Toast.makeText(this,getText(R.string.game_setting_toast),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.finishButton:
-                if (saveSetting()){
+                if (saveSetting()) {
                     saveToFile();
 //                    Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
 //                    finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
 //                    startActivity(finishIntent);
 //                    finish();
-                }else{
-                    Toast.makeText(this,getText(R.string.game_setting_toast),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
         }
     }
-    private boolean saveToFile(){
+    private boolean saveToFile() {
         File sdcardDir = Environment.getExternalStorageDirectory();
-        File file = new File(sdcardDir.getPath()+"//debateClock");
+        File file = new File(sdcardDir.getPath() + "//debateClock");
         if (!file.exists()) {
             //若不存在，创建目录，可以在应用启动的时候创建
             file.mkdir();
         }
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(sdcardDir.getPath() + "//debateClock" + "//sxy.txt"));
+            objectOutputStream.writeObject(CommonUtils.ruleList);
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(sdcardDir.getPath() + "//debateClock" + "//sxy.txt"));
+            LinkedList<RuleSettingInfo> sunxinyang = (LinkedList<RuleSettingInfo>) objectInputStream.readObject();
+            LinkedList<RuleSettingInfo> ss = sunxinyang;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+//        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter());
 //        String data = (String) dataArray.get(i) + "\n";
 //        sensitiveWords += data;
 //        try {
-//            FileOutputStream outputStream = new FileOutputStream(file);
+//        FileOutputStream outputStream = new FileOutputStream(file);
 //            byte[] sensitiveBytes = sensitiveWords.getBytes();
 //            outputStream.write(sensitiveBytes);
 //            outputStream.flush();
@@ -196,16 +221,16 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         String positiveTime = positiveTimeEdit.getText().toString().trim();
         String negativeTime = negativeTimeEdit.getText().toString().trim();
 
-        if("".equals(stageName) || timeModel == CommonUtils.BOTH_NOT){
+        if ("".equals(stageName) || timeModel == CommonUtils.BOTH_NOT) {
             return false;
         }
-        if(timeModel == CommonUtils.POSITIVE && "".equals(positiveTime)){
+        if (timeModel == CommonUtils.POSITIVE && "".equals(positiveTime)) {
             return false;
         }
-        if(timeModel == CommonUtils.NEGATIVE && "".equals(negativeTime)){
+        if (timeModel == CommonUtils.NEGATIVE && "".equals(negativeTime)) {
             return false;
         }
-        if(timeModel == CommonUtils.BOTH && "".equals(positiveTime) && "".equals(negativeTime)){
+        if (timeModel == CommonUtils.BOTH && "".equals(positiveTime) && "".equals(negativeTime)) {
             return false;
         }
 
@@ -215,10 +240,10 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         ruleSettingInfo.positiveTime = "".equals(positiveTime) ? 0 : Integer.parseInt(positiveTime);
         ruleSettingInfo.negativeTime = "".equals(negativeTime) ? 0 : Integer.parseInt(negativeTime);
         ruleSettingInfo.tips = checkBox.isChecked() ? true : false;
-        if(listNum < CommonUtils.ruleList.size()){
+        if (listNum < CommonUtils.ruleList.size()) {
             CommonUtils.ruleList.remove(listNum);
             CommonUtils.ruleList.add(listNum, ruleSettingInfo);
-        }else {
+        } else {
             CommonUtils.ruleList.add(listNum, ruleSettingInfo);
         }
         Toast.makeText(this, "链表长度为： " + CommonUtils.ruleList.size(), Toast.LENGTH_SHORT).show();

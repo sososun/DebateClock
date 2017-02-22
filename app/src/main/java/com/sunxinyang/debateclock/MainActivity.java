@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, GameRuleSettingActivity.class);
                     intent.putExtra(CommonUtils.LIST_NUM, 0);
                     startActivity(intent);
-                    finish();
                 } else {
                     Toast.makeText(MainActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }

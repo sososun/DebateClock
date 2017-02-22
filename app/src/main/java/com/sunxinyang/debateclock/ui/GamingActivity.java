@@ -93,6 +93,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void buttonClick() {
+        previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         settingButton.setOnClickListener(this);
         switchButton.setOnClickListener(this);
