@@ -18,5 +18,7 @@ public class CommonUtils {
 
     public final static String LIST_NUM = "listNum";
 
+    public final static String APP_PATH = "//debateClock";
+
     public static LinkedList<RuleSettingInfo> ruleList = new LinkedList<>();
 }

@@ -1,9 +1,10 @@
 package com.sunxinyang.debateclock.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,25 +14,13 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
 import com.sunxinyang.debateclock.util.RuleSettingInfo;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.util.LinkedList;
 
 /**
  * Created by soso-sun on 2017/2/18.
@@ -168,11 +157,7 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.finishButton:
                 if (saveSetting()) {
-                    saveToFile();
-//                    Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
-//                    finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
-//                    startActivity(finishIntent);
-//                    finish();
+                    createSaveDialog();
                 } else {
                     Toast.makeText(this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }
@@ -180,37 +165,59 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
             default:
         }
     }
-    private boolean saveToFile() {
+
+    private void startToGamingActivity(){
+        Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
+        finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
+        startActivity(finishIntent);
+        finish();
+    }
+    private void createSaveDialog(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText editText = new EditText(this);
+        editText.setHint(R.string.save_file_edittext);
+        builder.setMessage(R.string.save_file_message);
+        builder.setView(editText);
+        builder.setPositiveButton(R.string.save_file_confirm, new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if(saveToFile(editText.getText().toString().trim() + ".txt")){
+                    Toast.makeText(GameRuleSettingActivity.this, R.string.save_file_toast, Toast.LENGTH_SHORT).show();
+                    startToGamingActivity();
+                }else {
+                    Toast.makeText(GameRuleSettingActivity.this, R.string.save_file_failed_toast, Toast.LENGTH_SHORT).show();
+                    createSaveDialog();
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.save_file_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startToGamingActivity();
+            }
+        });
+        builder.create();
+        builder.show();
+    }
+    private boolean saveToFile(String fileName) {
         File sdcardDir = Environment.getExternalStorageDirectory();
-        File file = new File(sdcardDir.getPath() + "//debateClock");
+        File file = new File(sdcardDir.getPath() + CommonUtils.APP_PATH);
         if (!file.exists()) {
             //若不存在，创建目录，可以在应用启动的时候创建
             file.mkdir();
         }
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(sdcardDir.getPath() + "//debateClock" + "//sxy.txt"));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(sdcardDir.getPath() + CommonUtils.APP_PATH + "//" + fileName));
             objectOutputStream.writeObject(CommonUtils.ruleList);
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(sdcardDir.getPath() + "//debateClock" + "//sxy.txt"));
-            LinkedList<RuleSettingInfo> sunxinyang = (LinkedList<RuleSettingInfo>) objectInputStream.readObject();
-            LinkedList<RuleSettingInfo> ss = sunxinyang;
-        } catch (IOException e) {
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            return false;
         }
-
-//        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter());
-//        String data = (String) dataArray.get(i) + "\n";
-//        sensitiveWords += data;
-//        try {
-//        FileOutputStream outputStream = new FileOutputStream(file);
-//            byte[] sensitiveBytes = sensitiveWords.getBytes();
-//            outputStream.write(sensitiveBytes);
-//            outputStream.flush();
-//            outputStream.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         return true;
     }
 

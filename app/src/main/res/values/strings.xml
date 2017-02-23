@@ -15,6 +15,12 @@
     <!-- 赛制设置页面 -->
     <string name="rule_setting_stage_name">阶段名称</string>
     <string name="rule_setting_stage_name_edit">请输入阶段名称</string>
+    <string name="save_file_message">要将赛制保存以便下次直接使用吗？</string>
+    <string name="save_file_confirm">确认</string>
+    <string name="save_file_cancel">取消</string>
+    <string name="save_file_edittext">请输入要保存的文件名</string>
+    <string name="save_file_toast">保存成功</string>
+    <string name="save_file_failed_toast">保存成功</string>
     <!-- 计时页面 -->
     <string name="finish_game">完成比赛</string>
     <string name="start_time">开始计时</string>

@@ -3,7 +3,6 @@ package com.sunxinyang.debateclock;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 import com.sunxinyang.debateclock.ui.GameRuleSettingActivity;
 import com.sunxinyang.debateclock.util.CommonUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class GamePrepareActivity extends AppCompatActivity {
 
     Button button;
     EditText negativeTitle, positiveTitle, positiveName, negativeName;
@@ -29,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkEditAndSave()) {
                     CommonUtils.ruleList.clear();
-                    Intent intent = new Intent(MainActivity.this, GameRuleSettingActivity.class);
+                    Intent intent = new Intent(GamePrepareActivity.this, GameRuleSettingActivity.class);
                     intent.putExtra(CommonUtils.LIST_NUM, 0);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GamePrepareActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }
             }
         });

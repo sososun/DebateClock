@@ -9,22 +9,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.sunxinyang.debateclock.MainActivity"
-            android:label="开始一场辩论赛">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.sunxinyang.debateclock.GamePrepareActivity"
+            android:label="开始一场辩论赛">
+        </activity>
         <activity android:name="com.sunxinyang.debateclock.ui.GameRuleSettingActivity"
             android:label="设置赛制">
-
         </activity>
         <activity android:name="com.sunxinyang.debateclock.ui.GamingActivity"
             android:label="辩论赛名称">
-
         </activity>
+
     </application>
 
 </manifest>
