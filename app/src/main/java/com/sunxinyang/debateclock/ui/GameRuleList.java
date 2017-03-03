@@ -1,25 +1,21 @@
 package com.sunxinyang.debateclock.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
-import com.sunxinyang.debateclock.util.RuleSettingInfo;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Created by sunxinyang on 2017/2/23.
@@ -34,31 +30,19 @@ public class GameRuleList extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rule_list_activity);
-        RuleAdapt ruleAdapt = new RuleAdapt(readRuleFromFile());
+        RuleAdapt ruleAdapt = new RuleAdapt(CommonUtils.readRuleFromFile(), this);
         listViewCompat = (ListViewCompat) findViewById(R.id.list_view);
         listViewCompat.setAdapter(ruleAdapt);
-    }
-    private String[] readRuleFromFile(){
-//            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(sdcardDir.getPath() + CommonUtils.APP_PATH + "//" + fileName));
-//            LinkedList<RuleSettingInfo> sunxinyang = null;
-//            sunxinyang = (LinkedList<RuleSettingInfo>) objectInputStream.readObject();
-
-        File[] allFiles = new File(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH).listFiles();
-        String[] filename = new String[allFiles.length];
-        for(int i = 0; i < allFiles.length; i++){
-            if(allFiles[i].isFile()){
-                filename[i] = allFiles[i].getName();
-            }
-        }
-        return filename;
     }
 
     class RuleAdapt extends BaseAdapter{
 
         String[] filename;
+        Context context;
 
-        public RuleAdapt(String[] filename){
+        public RuleAdapt(String[] filename, Context context){
             this.filename = filename;
+            this.context = context;
         }
 
         @Override
@@ -78,7 +62,13 @@ public class GameRuleList extends AppCompatActivity{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            if(convertView == null){
+                convertView = LayoutInflater.from(context).inflate(R.layout.rule_list_item, null);
+            }
+            TextView textView = (TextView) convertView.findViewById(R.id.file_name);
+            textView.setText(filename[position]);
+
+            return convertView;
         }
     }
 }

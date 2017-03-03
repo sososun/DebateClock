@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sunxinyang.debateclock.ui.GameRuleList;
 import com.sunxinyang.debateclock.ui.GameRuleSettingActivity;
 import com.sunxinyang.debateclock.util.CommonUtils;
 
@@ -28,9 +29,13 @@ public class GamePrepareActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkEditAndSave()) {
                     CommonUtils.ruleList.clear();
-                    Intent intent = new Intent(GamePrepareActivity.this, GameRuleSettingActivity.class);
-                    intent.putExtra(CommonUtils.LIST_NUM, 0);
-                    startActivity(intent);
+                    if(CommonUtils.haveRuleFile()){
+                        startActivity(new Intent(GamePrepareActivity.this, GameRuleList.class));
+                    }else{
+                        Intent intent = new Intent(GamePrepareActivity.this, GameRuleSettingActivity.class);
+                        intent.putExtra(CommonUtils.LIST_NUM, 0);
+                        startActivity(intent);
+                    }
                 } else {
                     Toast.makeText(GamePrepareActivity.this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }

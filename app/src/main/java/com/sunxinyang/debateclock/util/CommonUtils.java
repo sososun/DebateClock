@@ -1,5 +1,8 @@
 package com.sunxinyang.debateclock.util;
 
+import android.os.Environment;
+
+import java.io.File;
 import java.util.LinkedList;
 
 /**
@@ -21,4 +24,23 @@ public class CommonUtils {
     public final static String APP_PATH = "//debateClock";
 
     public static LinkedList<RuleSettingInfo> ruleList = new LinkedList<>();
+
+    public static String[] readRuleFromFile(){
+//            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(sdcardDir.getPath() + CommonUtils.APP_PATH + "//" + fileName));
+//            LinkedList<RuleSettingInfo> sunxinyang = null;
+//            sunxinyang = (LinkedList<RuleSettingInfo>) objectInputStream.readObject();
+
+        File[] allFiles = new File(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH).listFiles();
+        String[] filename = new String[allFiles.length];
+        for(int i = 0; i < allFiles.length; i++){
+            if(allFiles[i].isFile()){
+                filename[i] = allFiles[i].getName();
+            }
+        }
+        return filename;
+    }
+
+    public static boolean haveRuleFile(){
+        return readRuleFromFile().length == 0 ? false : true;
+    }
 }
