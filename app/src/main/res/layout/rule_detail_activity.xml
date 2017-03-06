@@ -2,17 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <android.support.v7.widget.ListViewCompat
-        android:id="@+id/list_view"
+        android:id="@+id/rule_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/no_choose">
+        android:layout_above="@+id/use_rule"
+        >
 
     </android.support.v7.widget.ListViewCompat>
     <Button
-        android:id="@+id/no_choose"
+        android:id="@+id/use_rule"
+        android:layout_above="@+id/no_use_rule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/use_detail"/>
+    <Button
+        android:id="@+id/no_use_rule"
         android:layout_alignParentBottom="true"
-        android:text="@string/no_choose"
+        android:text="@string/no_use_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </RelativeLayout>

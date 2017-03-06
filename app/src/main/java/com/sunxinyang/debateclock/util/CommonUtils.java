@@ -3,6 +3,9 @@ package com.sunxinyang.debateclock.util;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.LinkedList;
 
 /**
@@ -26,9 +29,7 @@ public class CommonUtils {
     public static LinkedList<RuleSettingInfo> ruleList = new LinkedList<>();
 
     public static String[] readRuleFromFile(){
-//            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(sdcardDir.getPath() + CommonUtils.APP_PATH + "//" + fileName));
-//            LinkedList<RuleSettingInfo> sunxinyang = null;
-//            sunxinyang = (LinkedList<RuleSettingInfo>) objectInputStream.readObject();
+
 
         File[] allFiles = new File(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH).listFiles();
         String[] filename = new String[allFiles.length];
@@ -42,5 +43,23 @@ public class CommonUtils {
 
     public static boolean haveRuleFile(){
         return readRuleFromFile().length == 0 ? false : true;
+    }
+
+    public static LinkedList<RuleSettingInfo> readRuleList(){
+        //不对不对逻辑错误
+        String[] filename = readRuleFromFile();
+        LinkedList<RuleSettingInfo> ruleInfoList = null;
+        try {
+            for(String useName : filename){
+                ObjectInputStream objectInputStream = null;
+                objectInputStream = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH + "//" + useName));
+                ruleInfoList.add((RuleSettingInfo)objectInputStream.readObject());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ruleInfoList;
     }
 }

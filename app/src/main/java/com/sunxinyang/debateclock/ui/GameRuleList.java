@@ -1,15 +1,20 @@
 package com.sunxinyang.debateclock.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sunxinyang.debateclock.R;
@@ -24,15 +29,50 @@ import java.io.File;
 public class GameRuleList extends AppCompatActivity{
 
     ListViewCompat listViewCompat;
+    Button noChoose;
+    String[] filename;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rule_list_activity);
-        RuleAdapt ruleAdapt = new RuleAdapt(CommonUtils.readRuleFromFile(), this);
+        filename = CommonUtils.readRuleFromFile();
+        RuleAdapt ruleAdapt = new RuleAdapt(filename, this);
         listViewCompat = (ListViewCompat) findViewById(R.id.list_view);
         listViewCompat.setAdapter(ruleAdapt);
+        noChoose = (Button) findViewById(R.id.no_choose);
+        listViewCompat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                createDialog(position);
+            }
+        });
+        noChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(GameRuleList.this, GameRuleSettingActivity.class));
+            }
+        });
+    }
+
+    private void createDialog(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format(getString(R.string.choose_dialog_message), filename[position]));
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     class RuleAdapt extends BaseAdapter{

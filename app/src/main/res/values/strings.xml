@@ -25,4 +25,12 @@
     <string name="finish_game">完成比赛</string>
     <string name="start_time">开始计时</string>
     <string name="stop_time">暂停计时</string>
+    <!-- 赛制选择界面 -->
+    <string name="no_choose">设置新赛制</string>
+    <string name="choose_dialog_message">确认要选择%1$s为本场比赛的规则吗？</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <!-- 赛制明细列表 -->
+    <string name="use_detail">确认使用该赛制</string>
+    <string name="no_use_detail">返回赛制选择</string>
 </resources>
