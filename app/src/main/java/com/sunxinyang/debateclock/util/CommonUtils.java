@@ -46,20 +46,6 @@ public class CommonUtils {
     }
 
     public static LinkedList<RuleSettingInfo> readRuleList(){
-        //不对不对逻辑错误
-        String[] filename = readRuleFromFile();
-        LinkedList<RuleSettingInfo> ruleInfoList = null;
-        try {
-            for(String useName : filename){
-                ObjectInputStream objectInputStream = null;
-                objectInputStream = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH + "//" + useName));
-                ruleInfoList.add((RuleSettingInfo)objectInputStream.readObject());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return ruleInfoList;
+        return ruleList;
     }
 }

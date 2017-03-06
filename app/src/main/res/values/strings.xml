@@ -33,4 +33,7 @@
     <!-- 赛制明细列表 -->
     <string name="use_detail">确认使用该赛制</string>
     <string name="no_use_detail">返回赛制选择</string>
+    <string name="positive_message">正方：%1$d秒</string>
+    <string name="negative_message">反方：%1$d秒</string>
+    <string name="both_message">正方：%1$d秒，反方：%2$d秒</string>
 </resources>

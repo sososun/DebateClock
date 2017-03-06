@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,11 +23,12 @@ import com.sunxinyang.debateclock.util.CommonUtils;
 
 public class GamingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView positive, positiveTitle, positiveTime, negative, negativeTitle, negativeTime,showTime,stageName;
-    Button previousButton, nextButton, settingButton, switchButton;
-    int positiveTimeInt, negativeTimeInt, step;
-    int timeModel,bothTag = CommonUtils.POSITIVE;
+    private TextView positive, positiveTitle, positiveTime, negative, negativeTitle, negativeTime,showTime,stageName;
+    private Button previousButton, nextButton, settingButton, switchButton;
+    private int positiveTimeInt, negativeTimeInt, step;
+    private int timeModel,bothTag = CommonUtils.POSITIVE;
     private TimeCount positiveTimeCount, negativeTimeCount;
+    private boolean remindTime = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
         SharedPreferences preferences = getSharedPreferences("game_title", Context.MODE_PRIVATE);
         step = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
         timeModel = CommonUtils.ruleList.get(step).timeModel;
+        remindTime = CommonUtils.ruleList.get(step).tips;
         positive.setText(preferences.getString("positiveName", null));
         negative.setText(preferences.getString("negativeName", null));
         positiveTitle.setText(preferences.getString("positiveTitle", null));
@@ -180,11 +183,19 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
         positiveTimeInt = (int)millisUntilFinished / 1000;
         positiveTime.setText(positiveTimeInt + "秒");
         showTime.setText(positiveTimeInt + "秒");
+        remindTime(positiveTimeInt);
     }
     private void changeNegativeTime(long millisUntilFinished){
         negativeTimeInt = (int)millisUntilFinished / 1000;
         negativeTime.setText(negativeTimeInt + "秒");
         showTime.setText(negativeTimeInt + "秒");
+        remindTime(negativeTimeInt);
+    }
+    private void remindTime(int time){
+        if(time == 30 && remindTime){
+            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(100);
+        }
     }
 
     @Override

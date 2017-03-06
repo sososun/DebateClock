@@ -19,8 +19,12 @@ import android.widget.TextView;
 
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
+import com.sunxinyang.debateclock.util.RuleSettingInfo;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.LinkedList;
 
 /**
  * Created by sunxinyang on 2017/2/23.
@@ -56,13 +60,14 @@ public class GameRuleList extends AppCompatActivity{
         });
     }
 
-    private void createDialog(int position){
+    private void createDialog(final int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(String.format(getString(R.string.choose_dialog_message), filename[position]));
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                loadData(filename[position]);
+                startActivity(new Intent(GameRuleList.this, RuleDetailList.class));
             }
         });
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -73,6 +78,21 @@ public class GameRuleList extends AppCompatActivity{
         });
         builder.create();
         builder.show();
+    }
+
+    private void loadData(String filename){
+        if(CommonUtils.ruleList.size() != 0){
+            CommonUtils.ruleList.clear();
+        }
+        try {
+            ObjectInputStream objectInputStream = null;
+            objectInputStream = new ObjectInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getPath() + CommonUtils.APP_PATH + "//" + filename));
+            CommonUtils.ruleList = (LinkedList<RuleSettingInfo>)objectInputStream.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     class RuleAdapt extends BaseAdapter{

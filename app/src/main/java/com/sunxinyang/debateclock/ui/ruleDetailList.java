@@ -1,6 +1,7 @@
 package com.sunxinyang.debateclock.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import java.util.LinkedList;
  * Created by soso-sun on 2017/3/5.
  */
 
-public class ruleDetailList extends AppCompatActivity implements View.OnClickListener{
+public class RuleDetailList extends AppCompatActivity implements View.OnClickListener{
 
     ListViewCompat listViewCompat;
     Button useButton, nouseButton;
@@ -38,17 +39,26 @@ public class ruleDetailList extends AppCompatActivity implements View.OnClickLis
         useButton.setOnClickListener(this);
         nouseButton.setOnClickListener(this);
         detailAdapt = new DetailAdapt(this, CommonUtils.readRuleList());
+        listViewCompat.setAdapter(detailAdapt);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.use_rule:
+                startToGamingActivity();
                 break;
             case R.id.no_use_rule:
+                finish();
                 break;
             default:
         }
+    }
+    private void startToGamingActivity(){
+        Intent finishIntent = new Intent(RuleDetailList.this, GamingActivity.class);
+        finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
+        startActivity(finishIntent);
+        finish();
     }
 
     class DetailAdapt extends BaseAdapter{
@@ -84,8 +94,21 @@ public class ruleDetailList extends AppCompatActivity implements View.OnClickLis
             }
             TextView title = (TextView) convertView.findViewById(R.id.title);
             TextView message = (TextView) convertView.findViewById(R.id.message);
-            title.setText();
-            return null;
+            title.setText(ruleInfoList.get(position).stageName);
+            message.setText(setMessage(ruleInfoList.get(position)));
+            return convertView;
+        }
+
+        private String setMessage(RuleSettingInfo ruleSettingInfo){
+            String message = "";
+            if(ruleSettingInfo.timeModel == CommonUtils.POSITIVE){
+                message = String.format(getString(R.string.positive_message), ruleSettingInfo.positiveTime);
+            }else if(ruleSettingInfo.timeModel == CommonUtils.NEGATIVE){
+                message = String.format(getString(R.string.negative_message), ruleSettingInfo.negativeTime);
+            }else if(ruleSettingInfo.timeModel == CommonUtils.BOTH){
+                message = String.format(getString(R.string.both_message), ruleSettingInfo.positiveTime, ruleSettingInfo.negativeTime);
+            }
+            return message;
         }
     }
 }

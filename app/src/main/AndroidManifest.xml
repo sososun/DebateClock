@@ -28,6 +28,9 @@
         <activity android:name=".ui.GameRuleList"
             android:label="请选择赛制">
         </activity>
+        <activity android:name=".ui.RuleDetailList"
+            android:label="赛制明细"
+            ></activity>
 
     </application>
 

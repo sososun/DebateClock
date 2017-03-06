@@ -45,6 +45,9 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         buttonClick();
         choiceTimeUI(CommonUtils.BOTH_NOT);
         if (isFirst()) {
+            if(CommonUtils.ruleList.size() != 0){
+                CommonUtils.ruleList.clear();
+            }
             previousButton.setVisibility(View.GONE);
         }
         listNum = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
@@ -166,10 +169,9 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void startToGamingActivity(){
-        Intent finishIntent = new Intent(GameRuleSettingActivity.this, GamingActivity.class);
-        finishIntent.putExtra(CommonUtils.LIST_NUM, 0);
-        startActivity(finishIntent);
+    private void startToRuleDetailList(){
+        Intent intent = new Intent(GameRuleSettingActivity.this, RuleDetailList.class);
+        startActivity(intent);
         finish();
     }
     private void createSaveDialog(){
@@ -185,7 +187,7 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 dialog.dismiss();
                 if(saveToFile(editText.getText().toString().trim() + ".txt")){
                     Toast.makeText(GameRuleSettingActivity.this, R.string.save_file_toast, Toast.LENGTH_SHORT).show();
-                    startToGamingActivity();
+                    startToRuleDetailList();
                 }else {
                     Toast.makeText(GameRuleSettingActivity.this, R.string.save_file_failed_toast, Toast.LENGTH_SHORT).show();
                     createSaveDialog();
@@ -196,7 +198,7 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    startToGamingActivity();
+                    startToRuleDetailList();
             }
         });
         builder.create();
