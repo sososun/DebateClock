@@ -55,7 +55,9 @@ public class GameRuleList extends AppCompatActivity{
         noChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GameRuleList.this, GameRuleSettingActivity.class));
+                Intent intent = new Intent(GameRuleList.this, GameRuleSettingActivity.class);
+                intent.putExtra(CommonUtils.LIST_NUM, CommonUtils.FIRST_INTO_RULE_SETTING);
+                startActivity(intent);
             }
         });
     }

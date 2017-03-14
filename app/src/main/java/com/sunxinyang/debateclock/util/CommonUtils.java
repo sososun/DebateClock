@@ -22,9 +22,13 @@ public class CommonUtils {
 
     public final static int BOTH_NOT = 0;
 
+    public final static int EXIT_TIME = 80;
+
     public final static String LIST_NUM = "listNum";
 
     public final static String APP_PATH = "//debateClock";
+
+    public final static int FIRST_INTO_RULE_SETTING = -1;
 
     public static LinkedList<RuleSettingInfo> ruleList = new LinkedList<>();
 
