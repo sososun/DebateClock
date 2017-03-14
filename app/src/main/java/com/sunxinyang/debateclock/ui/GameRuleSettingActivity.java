@@ -4,8 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,7 +37,8 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
     EditText stageNameEdit, positiveTimeEdit, negativeTimeEdit;
     RadioButton positiveRadioButton, negativeRadioButton, bothRadioButton;
     CheckBox checkBox;
-    private int listNum;
+    private boolean isExit = false;
+    private int listNum = 0;
     private int timeModel = CommonUtils.BOTH_NOT;
 
     @Override
@@ -48,32 +52,38 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
             if(CommonUtils.ruleList.size() != 0){
                 CommonUtils.ruleList.clear();
             }
+        }
+        listNum = getIntent().getIntExtra(CommonUtils.LIST_NUM, CommonUtils.FIRST_INTO_RULE_SETTING);
+        if(listNum < 1){
             previousButton.setVisibility(View.GONE);
         }
-        listNum = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
         showRule(listNum);
+        if(listNum == CommonUtils.FIRST_INTO_RULE_SETTING){
+            listNum = listNum + 1;
+        }
     }
 
     private void showRule(int listNum) {
-        if (listNum < CommonUtils.ruleList.size()) {
+        int i = CommonUtils.ruleList.size();
+        if (listNum < CommonUtils.ruleList.size() && listNum != CommonUtils.FIRST_INTO_RULE_SETTING) {
             stageNameEdit.setText(CommonUtils.ruleList.get(listNum).stageName);
             checkBox.setChecked(CommonUtils.ruleList.get(listNum).tips);
             switch (CommonUtils.ruleList.get(listNum).timeModel) {
                 case CommonUtils.BOTH:
-                    bothRadioButton.setChecked(true);
-                    positiveTimeEdit.setText(CommonUtils.ruleList.get(listNum).positiveTime);
-                    negativeTimeEdit.setText(CommonUtils.ruleList.get(listNum).negativeTime);
                     choiceTimeUI(CommonUtils.BOTH);
+                    bothRadioButton.setChecked(true);
+                    positiveTimeEdit.setText(String.valueOf(CommonUtils.ruleList.get(listNum).positiveTime));
+                    negativeTimeEdit.setText(String.valueOf(CommonUtils.ruleList.get(listNum).negativeTime));
                     break;
                 case CommonUtils.POSITIVE:
-                    positiveRadioButton.setChecked(true);
-                    positiveTimeEdit.setText(CommonUtils.ruleList.get(listNum).positiveTime);
                     choiceTimeUI(CommonUtils.POSITIVE);
+                    positiveRadioButton.setChecked(true);
+                    positiveTimeEdit.setText(String.valueOf(CommonUtils.ruleList.get(listNum).positiveTime));
                     break;
                 case CommonUtils.NEGATIVE:
-                    negativeRadioButton.setChecked(true);
-                    negativeTimeEdit.setText(CommonUtils.ruleList.get(listNum).negativeTime);
                     choiceTimeUI(CommonUtils.NEGATIVE);
+                    negativeRadioButton.setChecked(true);
+                    negativeTimeEdit.setText(String.valueOf(CommonUtils.ruleList.get(listNum).negativeTime));
                     break;
                 default:
                     choiceTimeUI(CommonUtils.BOTH_NOT);
@@ -82,7 +92,7 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
     }
 
     private boolean isFirst() {
-        return getIntent().getIntExtra(CommonUtils.LIST_NUM, 0) == 0 ? true : false;
+        return getIntent().getIntExtra(CommonUtils.LIST_NUM, CommonUtils.FIRST_INTO_RULE_SETTING) == CommonUtils.FIRST_INTO_RULE_SETTING ? true : false;
     }
 
     private void initUI() {
@@ -148,12 +158,14 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
                 Intent previousIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
                 previousIntent.putExtra(CommonUtils.LIST_NUM, listNum - 1);
                 startActivity(previousIntent);
+                finish();
                 break;
             case R.id.nextButton:
                 if (saveSetting()) {
                     Intent nextIntent = new Intent(GameRuleSettingActivity.this, GameRuleSettingActivity.class);
                     nextIntent.putExtra(CommonUtils.LIST_NUM, listNum + 1);
                     startActivity(nextIntent);
+                    finish();
                 } else {
                     Toast.makeText(this, getText(R.string.game_setting_toast), Toast.LENGTH_SHORT).show();
                 }
@@ -255,7 +267,32 @@ public class GameRuleSettingActivity extends AppCompatActivity implements View.O
         } else {
             CommonUtils.ruleList.add(listNum, ruleSettingInfo);
         }
-        Toast.makeText(this, "链表长度为： " + CommonUtils.ruleList.size(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "链表长度为： " + CommonUtils.ruleList.size(), Toast.LENGTH_SHORT).show();
         return true;
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_MENU){
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
+    @Override
+    public void onBackPressed() {
+        if (!isExit) {
+            Toast.makeText(this, R.string.click_to_exit, Toast.LENGTH_SHORT).show();
+            isExit = true;
+            mHandler.removeMessages(CommonUtils.EXIT_TIME);
+            mHandler.sendEmptyMessageDelayed(CommonUtils.EXIT_TIME, 2000);
+        } else {
+            finish();
+        }
     }
 }

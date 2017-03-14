@@ -33,7 +33,7 @@ public class GamePrepareActivity extends AppCompatActivity {
                         startActivity(new Intent(GamePrepareActivity.this, GameRuleList.class));
                     }else{
                         Intent intent = new Intent(GamePrepareActivity.this, GameRuleSettingActivity.class);
-                        intent.putExtra(CommonUtils.LIST_NUM, 0);
+                        intent.putExtra(CommonUtils.LIST_NUM, CommonUtils.FIRST_INTO_RULE_SETTING);
                         startActivity(intent);
                     }
                 } else {

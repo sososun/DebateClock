@@ -34,7 +34,6 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
     private TimeCount positiveTimeCount, negativeTimeCount;
     private boolean remindTime = false;
     private boolean isExit = false;
-    private static final int EXIT_TIME = 80;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
 
     private void loadData() {
         SharedPreferences preferences = getSharedPreferences("game_title", Context.MODE_PRIVATE);
-        step = getIntent().getIntExtra(CommonUtils.LIST_NUM, 0);
+        step = getIntent().getIntExtra(CommonUtils.LIST_NUM, CommonUtils.FIRST_INTO_RULE_SETTING);
         timeModel = CommonUtils.ruleList.get(step).timeModel;
         remindTime = CommonUtils.ruleList.get(step).tips;
         positive.setText(preferences.getString("positiveName", null));
@@ -239,8 +238,8 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
         if (!isExit) {
             Toast.makeText(this, R.string.click_to_exit, Toast.LENGTH_SHORT).show();
             isExit = true;
-            mHandler.removeMessages(EXIT_TIME);
-            mHandler.sendEmptyMessageDelayed(EXIT_TIME, 2000);
+            mHandler.removeMessages(CommonUtils.EXIT_TIME);
+            mHandler.sendEmptyMessageDelayed(CommonUtils.EXIT_TIME, 2000);
         } else {
             finish();
         }
