@@ -25,6 +25,7 @@
     <string name="finish_game">完成比赛</string>
     <string name="start_time">开始计时</string>
     <string name="stop_time">暂停计时</string>
+    <string name="click_to_exit">再按一次退出比赛</string>
     <!-- 赛制选择界面 -->
     <string name="no_choose">设置新赛制</string>
     <string name="choose_dialog_message">确认要选择%1$s为本场比赛的规则吗？</string>

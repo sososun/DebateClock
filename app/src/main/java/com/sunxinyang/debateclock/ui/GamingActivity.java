@@ -3,8 +3,11 @@ package com.sunxinyang.debateclock.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sunxinyang.debateclock.R;
 import com.sunxinyang.debateclock.util.CommonUtils;
@@ -29,6 +33,8 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
     private int timeModel,bothTag = CommonUtils.POSITIVE;
     private TimeCount positiveTimeCount, negativeTimeCount;
     private boolean remindTime = false;
+    private boolean isExit = false;
+    private static final int EXIT_TIME = 80;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +64,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
             positiveTime.setText(positiveTimeInt + "秒");
             negativeTime.setText(negativeTimeInt + "秒");
             switchButton.setVisibility(View.VISIBLE);
-            switchButton.setClickable(false);
-//            switchButton.setBackground();
+            switchButtonClickState(false);
         } else if (timeModel == CommonUtils.POSITIVE) {
             positiveTime.setVisibility(View.VISIBLE);
             negativeTime.setVisibility(View.GONE);
@@ -128,7 +133,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
                         }else if (bothTag == CommonUtils.NEGATIVE){
                             startNegativeTime();
                         }
-                        switchButton.setClickable(true);
+                        switchButtonClickState(true);
                     }else if (timeModel == CommonUtils.POSITIVE){
                         startPositiveTime();
                     }else if (timeModel == CommonUtils.NEGATIVE){
@@ -146,7 +151,7 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
                         }else if (bothTag == CommonUtils.NEGATIVE){
                             negativeTimeCount.cancel();
                         }
-                        switchButton.setClickable(false);
+                        switchButtonClickState(false);
                     }
                     settingButton.setText(R.string.start_time);
                 }
@@ -156,12 +161,15 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
                     Intent previousIntent = new Intent(GamingActivity.this, GamingActivity.class);
                     previousIntent.putExtra(CommonUtils.LIST_NUM, step - 1);
                     startActivity(previousIntent);
+                    finish();
                 }
+                break;
             case R.id.nextButton:
                 if(step != CommonUtils.ruleList.size() - 1){
                     Intent nextIntent = new Intent(GamingActivity.this, GamingActivity.class);
                     nextIntent.putExtra(CommonUtils.LIST_NUM, step + 1);
                     startActivity(nextIntent);
+                    finish();
                 }else{
                     finish();
                 }
@@ -194,7 +202,17 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
     private void remindTime(int time){
         if(time == 30 && remindTime){
             Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(100);
+            vibrator.vibrate(400);
+        }
+    }
+
+    private void switchButtonClickState(boolean state){
+        if(state){
+            switchButton.setClickable(true);
+            switchButton.setTextColor(Color.BLACK);
+        }else {
+            switchButton.setClickable(false);
+            switchButton.setTextColor(Color.GRAY);
         }
     }
 
@@ -204,7 +222,28 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
             negativeTimeCount.cancel();
         if (positiveTimeCount != null)
             positiveTimeCount.cancel();
+        if(keyCode == KeyEvent.KEYCODE_MENU){
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
+    }
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
+    @Override
+    public void onBackPressed() {
+        if (!isExit) {
+            Toast.makeText(this, R.string.click_to_exit, Toast.LENGTH_SHORT).show();
+            isExit = true;
+            mHandler.removeMessages(EXIT_TIME);
+            mHandler.sendEmptyMessageDelayed(EXIT_TIME, 2000);
+        } else {
+            finish();
+        }
     }
 
     class TimeCount extends CountDownTimer {
@@ -214,7 +253,28 @@ public class GamingActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void onFinish() {// 计时完毕
-
+            settingButton.setClickable(false);
+            switch (timeModel){
+                case CommonUtils.BOTH:
+                    if(bothTag == CommonUtils.POSITIVE){
+                        positiveTime.setText("正方时间到");
+                        showTime.setText("正方时间到");
+                    }else if(bothTag == CommonUtils.NEGATIVE){
+                        negativeTime.setText("反方时间到");
+                        showTime.setText("反方时间到");
+                    }
+                    GamingActivity.this.switchButtonClickState(false);
+                    break;
+                case CommonUtils.POSITIVE:
+                    positiveTime.setText("时间到");
+                    showTime.setText("时间到");
+                    break;
+                case CommonUtils.NEGATIVE:
+                    positiveTime.setText("时间到");
+                    showTime.setText("时间到");
+                    break;
+                default:
+            }
         }
 
         @Override
